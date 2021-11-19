@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: simple-nginx
+spec:
+  rules:
+    - host: ${APPLICATION_FQDN}
+      http:
+        paths:
+          - backend:
+              serviceName: simple-nginx
+              servicePort: 80
