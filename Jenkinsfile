@@ -46,11 +46,16 @@ node {
 
     stage('Build') {
         //docker_image = docker.build("${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}")
+        sh """
+          sudo systemctl stop docker
+          echo '{"cgroup-parent":"/actions_job","storage-driver":"vfs"}' | sudo tee /etc/docker/daemon.json
+          sudo systemctl start docker
+        """ 
         docker_image = docker.build("wsoualhi/${IMAGE_REPOSITORY}")    
         //docker_image =  docker.build("my-image:${env.BUILD_ID}")   
         //sh """
         //docker build -t wsoualhi/${IMAGE_REPOSITORY} .
-        //""" 
+        //"""  
     }
 
     stage('Unit Tests') {
