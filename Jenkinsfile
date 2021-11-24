@@ -1,6 +1,6 @@
-/*
-IMAGE_REPOSITORY = "simple-nginx"
 
+IMAGE_REPOSITORY = "Nginx-Equinix-Perso"
+/*
 // For available target test clusters, contact your platform administrator, it is possible to use eu.demo.mirantis.com with istio_gateway
 // For available target clusters, contact your platform administrator, it is possible to use us.demo.mirantis.com with ingress.
 TARGET_CLUSTER_DOMAIN = "us.demo.mirantis.com"
@@ -46,7 +46,7 @@ node {
 
     stage('Build') {
         //docker_image = docker.build("${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}")
-        docker_image = docker.build("wsoualhi-dev/simple-nginx")    
+        docker_image = docker.build("wsoualhi-dev/${IMAGE_REPOSITORY}")    
     }
 
     stage('Unit Tests') {
