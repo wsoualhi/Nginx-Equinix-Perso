@@ -46,7 +46,7 @@ node {
 
     stage('Build') {
         //docker_image = docker.build("${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}")
-        docker_image = docker.build("wsoualhi-dev/${IMAGE_REPOSITORY}")    
+        docker_image = docker.build("wsoualhi/${IMAGE_REPOSITORY}")    
         //docker_image =  docker.build("my-image:${env.BUILD_ID}")   
         //sh """
         //docker build -t wsoualhi/${IMAGE_REPOSITORY} .
