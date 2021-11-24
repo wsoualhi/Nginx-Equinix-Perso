@@ -46,11 +46,6 @@ node {
 
     stage('Build') {
         //docker_image = docker.build("${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}")
-        //sh """
-          //service docker stop
-          //echo '{"cgroup-parent":"/actions_job","storage-driver":"vfs"}' | tee /etc/docker/daemon.json
-          //service docker start
-        //""" 
         docker_image = docker.build("wsoualhi/${IMAGE_REPOSITORY}")    
         //docker_image =  docker.build("my-image:${env.BUILD_ID}")   
         //sh """
