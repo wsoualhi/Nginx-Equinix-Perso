@@ -43,9 +43,10 @@ node {
     stage('Checkout') {
         checkout scm
     }
-/*
+
     stage('Build') {
-        docker_image = docker.build("${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}")
+        //docker_image = docker.build("${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}")
+        docker_image = docker.build("wsoualhi-dev/simple-nginx")    
     }
 
     stage('Unit Tests') {
@@ -53,7 +54,7 @@ node {
             sh 'echo "Tests passed"'
         }
     }
-
+/*
     stage('Push') {
         docker.withRegistry(TARGET_CLUSTER['REGISTRY_URI'], TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID']) {
             docker_image.push(IMAGE_TAG)
