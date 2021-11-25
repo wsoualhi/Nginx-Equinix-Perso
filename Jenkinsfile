@@ -62,7 +62,11 @@ node {
     stage('Push') {
         //docker.withRegistry(TARGET_CLUSTER['REGISTRY_URI'], TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID']) {
           //  docker_image.push(IMAGE_TAG)
-            docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
+            // the following 2 linges are working well
+            //docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
+            //docker_image.push("1")
+
+             docker.withRegistry('mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com', 'MSRaws') {
             docker_image.push("1")
  
             //dockerHub
