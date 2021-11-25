@@ -58,13 +58,17 @@ node {
             sh 'echo "Tests passed"'
         }
     }
-/*
+
     stage('Push') {
-        docker.withRegistry(TARGET_CLUSTER['REGISTRY_URI'], TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID']) {
-            docker_image.push(IMAGE_TAG)
+        //docker.withRegistry(TARGET_CLUSTER['REGISTRY_URI'], TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID']) {
+          //  docker_image.push(IMAGE_TAG)
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
+            docker_image.push("1")
+ 
+            //dockerHub
         }
     }
-
+/*
     stage('Scan') {
         httpRequest acceptType: 'APPLICATION_JSON', authentication: TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID'], contentType: 'APPLICATION_JSON', httpMode: 'POST', ignoreSslErrors: true, responseHandle: 'NONE', url: "${TARGET_CLUSTER['REGISTRY_URI']}/api/v0/imagescan/scan/${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}/${IMAGE_TAG}/linux/amd64"
 
