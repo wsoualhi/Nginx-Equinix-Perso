@@ -66,7 +66,7 @@ node {
             //docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
             //docker_image.push("1")
 
-             docker.withRegistry('mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com', 'MSRaws') {
+             docker.withRegistry('https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com', 'MSRaws') {
             docker_image.push("1")
  
             //dockerHub
