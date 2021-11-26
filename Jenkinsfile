@@ -70,14 +70,9 @@ node {
 
     stage('Push') {
         //docker.withRegistry(TARGET_CLUSTER['REGISTRY_URI'], TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID']) {
-          //  docker_image.push(IMAGE_TAG)
-            // the following 2 linges are working well
             //docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
-            //docker_image.push("1")
             docker.withRegistry(TARGET_CLUSTER_REGISTRY_URI, 'MSRaws') {
             docker_image.push(IMAGE_TAG)
-            
- 
         }
     }
 
@@ -108,7 +103,7 @@ node {
         }
         println('Response JSON: ' + scan_result)
     }
-/*
+
     stage('Sign Development Image') {
         withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER['REGISTRY_HOSTNAME']}",
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
@@ -121,7 +116,7 @@ node {
             }
         }
     }
-
+/*
     stage('Deploy to Development') {
         withEnv(["APPLICATION_FQDN=${IMAGE_REPOSITORY}.dev.${APPLICATION_DOMAIN}",
                  "REGISTRY_HOSTNAME=${TARGET_CLUSTER['REGISTRY_HOSTNAME']}",
