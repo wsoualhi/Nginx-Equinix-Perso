@@ -1,5 +1,7 @@
 
 import java.time.LocalDateTime
+import java.time.*
+import java.time.format.DateTimeFormatter
 //variables that are same for everyone 
 IMAGE_REPOSITORY = "simple-nginx"
 //variables that change for every user, to be changed to global automated variables
@@ -8,6 +10,7 @@ IMAGE_NAMESPACE_PROD = "wsoualhi-prod"
 USERNAME = "wsoualhi"
 //variables that change on every execution
 def IMAGE_TAG = LocalDateTime.now()
+IMAGE_TAG = IMAGE_TAG.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
 println IMAGE_TAG
 /*
 // For available target test clusters, contact your platform administrator, it is possible to use eu.demo.mirantis.com with istio_gateway
@@ -77,7 +80,7 @@ node {
 
             docker.withRegistry('https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com', 'MSRaws') {
             println IMAGE_TAG
-            docker_image.push("IMAGE_TAG")
+            docker_image.push(IMAGE_TAG)
             
  
         }
