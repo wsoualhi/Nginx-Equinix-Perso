@@ -58,11 +58,6 @@ node {
 
     stage('Build') {
         docker_image = docker.build("${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}")
-        //docker_image = docker.build("wsoualhi/${IMAGE_REPOSITORY}")    
-        //docker_image =  docker.build("my-image:${env.BUILD_ID}")   
-        //sh """
-        //docker build -t wsoualhi/${IMAGE_REPOSITORY} .
-        //"""  
     }
 
     stage('Unit Tests') {
@@ -79,15 +74,15 @@ node {
             //docker_image.push("1")
 
             docker.withRegistry('https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com', 'MSRaws') {
-            println IMAGE_TAG
             docker_image.push(IMAGE_TAG)
             
  
         }
     }
-/*
+
     stage('Scan') {
-        httpRequest acceptType: 'APPLICATION_JSON', authentication: TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID'], contentType: 'APPLICATION_JSON', httpMode: 'POST', ignoreSslErrors: true, responseHandle: 'NONE', url: "${TARGET_CLUSTER['REGISTRY_URI']}/api/v0/imagescan/scan/${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}/${IMAGE_TAG}/linux/amd64"
+        //httpRequest acceptType: 'APPLICATION_JSON', authentication: TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID'], contentType: 'APPLICATION_JSON', httpMode: 'POST', ignoreSslErrors: true, responseHandle: 'NONE', url: "${TARGET_CLUSTER['REGISTRY_URI']}/api/v0/imagescan/scan/${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}/${IMAGE_TAG}/linux/amd64"
+        httpRequest acceptType: 'APPLICATION_JSON', authentication: 'MSRaws'], contentType: 'APPLICATION_JSON', httpMode: 'POST', ignoreSslErrors: true, responseHandle: 'NONE', url: "https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com/api/v0/imagescan/scan/${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}/${IMAGE_TAG}/linux/amd64"
 
         def scan_result
 
@@ -112,7 +107,7 @@ node {
         }
         println('Response JSON: ' + scan_result)
     }
-
+/*
     stage('Sign Development Image') {
         withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER['REGISTRY_HOSTNAME']}",
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
