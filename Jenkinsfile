@@ -1,4 +1,5 @@
 
+import java.time.LocalDateTime
 //variables that are same for everyone 
 IMAGE_REPOSITORY = "simple-nginx"
 //variables that change for every user, to be changed to global automated variables
