@@ -76,7 +76,7 @@ node {
             //docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
             //docker_image.push("1")
 
-            docker.withRegistry(TARGET_CLUSTER_REGISTRY_URI, 'TARGET_CLUSTER_REGISTRY_CREDENTIALS_ID') {
+            docker.withRegistry('TARGET_CLUSTER_REGISTRY_URI', 'TARGET_CLUSTER_REGISTRY_CREDENTIALS_ID') {
             docker_image.push(IMAGE_TAG)
             
  
