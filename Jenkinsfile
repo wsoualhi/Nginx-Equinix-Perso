@@ -13,8 +13,7 @@ def IMAGE_TAG = LocalDateTime.now()
 IMAGE_TAG = IMAGE_TAG.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
 println IMAGE_TAG
 //temporary variables
-def TARGET_CLUSTER_REGISTRY_CREDENTIALS_ID = MSRaws
-def TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
+TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
 /*
 // For available target test clusters, contact your platform administrator, it is possible to use eu.demo.mirantis.com with istio_gateway
 // For available target clusters, contact your platform administrator, it is possible to use us.demo.mirantis.com with ingress.
@@ -75,11 +74,7 @@ node {
             // the following 2 linges are working well
             //docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
             //docker_image.push("1")
-            println MSRaws
-            println 'MSRaws'
-            println TARGET_CLUSTER_REGISTRY_CREDENTIALS_ID
-            pinntln 'TARGET_CLUSTER_REGISTRY_CREDENTIALS_ID'
-            docker.withRegistry(TARGET_CLUSTER_REGISTRY_URI, 'TARGET_CLUSTER_REGISTRY_CREDENTIALS_ID') {
+            docker.withRegistry(TARGET_CLUSTER_REGISTRY_URI, 'MSRaws') {
             docker_image.push(IMAGE_TAG)
             
  
