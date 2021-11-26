@@ -7,7 +7,8 @@ IMAGE_NAMESPACE_DEV = "wsoualhi-dev"
 IMAGE_NAMESPACE_PROD = "wsoualhi-prod"
 USERNAME = "wsoualhi"
 //variables that change on every execution
-IMAGE_TAG = LocalDateTime.now()
+def IMAGE_TAG = LocalDateTime.now()
+println IMAGE_TAG
 /*
 // For available target test clusters, contact your platform administrator, it is possible to use eu.demo.mirantis.com with istio_gateway
 // For available target clusters, contact your platform administrator, it is possible to use us.demo.mirantis.com with ingress.
@@ -75,7 +76,8 @@ node {
             //docker_image.push("1")
 
             docker.withRegistry('https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com', 'MSRaws') {
-            docker_image.push("1")
+            println IMAGE_TAG
+            docker_image.push(IMAGE_TAG)
             
  
         }
