@@ -77,7 +77,7 @@ node {
 
             docker.withRegistry('https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com', 'MSRaws') {
             println IMAGE_TAG
-            docker_image.push(IMAGE_TAG)
+            docker_image.push("IMAGE_TAG")
             
  
         }
