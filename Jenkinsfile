@@ -4,23 +4,26 @@ import java.time.*
 import java.time.format.DateTimeFormatter
 //variables that are same for everyone 
 IMAGE_REPOSITORY = "simple-nginx"
+//temporary variables
+TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
+TARGET_CLUSTER_REGISTRY_HOSTNAME = 'mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
+TARGET_CLUSTER_KUBE_DOMAIN_NAME = "mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com"// "kube.us.demo.mirantis.com" this is for US, how can we do for equinix ? 
 //variables that change for every user, to be changed to global automated variables
 IMAGE_NAMESPACE_DEV = "wsoualhi-dev"
 IMAGE_NAMESPACE_PROD = "wsoualhi-prod"
+KUBERNETES_NAMESPACE_DEV = "${IMAGE_NAMESPACE_DEV}"
+KUBERNETES_NAMESPACE_PROD = "${IMAGE_NAMESPACE_PROD}"
 USERNAME = "wsoualhi"
+APPLICATION_DOMAIN = "${USERNAME}.${TARGET_CLUSTER_KUBE_DOMAIN_NAME}"
 //variables that change on every execution
 def IMAGE_TAG = LocalDateTime.now()
 IMAGE_TAG = IMAGE_TAG.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
 println IMAGE_TAG
-//temporary variables
-TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
+
 /*
 // For available target test clusters, contact your platform administrator, it is possible to use eu.demo.mirantis.com with istio_gateway
 // For available target clusters, contact your platform administrator, it is possible to use us.demo.mirantis.com with ingress.
 TARGET_CLUSTER_DOMAIN = "us.demo.mirantis.com"
-
-// Available orchestrators = [ "kubernetes" | "swarm" ]
-ORCHESTRATOR = "kubernetes"
 
 // Available ingress = [ "ingress" | "istio_gateway" ]
 KUBERNETES_INGRESS = "ingress"
@@ -103,9 +106,9 @@ node {
         }
         println('Response JSON: ' + scan_result)
     }
-
+/*
     stage('Sign Development Image') {
-        withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER['REGISTRY_HOSTNAME']}",
+        withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
                  "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
                  "IMAGE_TAG=${IMAGE_TAG}",
@@ -113,19 +116,19 @@ node {
             withCredentials([string(credentialsId: TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'] , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
                 sh 'docker trust key load ${TRUST_SIGNER_KEY}'
                 sh 'docker trust sign ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
+                //println (TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'])
+                // com.mirantis.demo.us-jenkins_signing_signer-passphrase
             }
         }
     }
-/*
+*/
     stage('Deploy to Development') {
         withEnv(["APPLICATION_FQDN=${IMAGE_REPOSITORY}.dev.${APPLICATION_DOMAIN}",
-                 "REGISTRY_HOSTNAME=${TARGET_CLUSTER['REGISTRY_HOSTNAME']}",
+                 "REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
                  "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
                  "IMAGE_TAG=${IMAGE_TAG}",
                  "USERNAME=${USERNAME}"]) {
-            if(ORCHESTRATOR.toLowerCase() == "kubernetes"){
-                println("Deploying to Kubernetes")
                 withEnv(["KUBERNETES_CONTEXT=${TARGET_CLUSTER['KUBERNETES_CONTEXT']}", 
                          "KUBERNETES_INGRESS=${KUBERNETES_INGRESS}",
                          "KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE_DEV}"]) {
@@ -133,17 +136,8 @@ node {
                     sh 'envsubst < kubernetes/002_simple-nginx_service.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                     sh 'envsubst < kubernetes/003_simple-nginx_${KUBERNETES_INGRESS}.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                 }
-            }
-            else if (ORCHESTRATOR.toLowerCase() == "swarm"){
-                println("Deploying to Swarm")
-                withEnv(["UCP_COLLECTION_PATH=${UCP_COLLECTION_PATH}"]) {
-                    withDockerServer([credentialsId: TARGET_CLUSTER['UCP_CREDENTIALS_ID'], uri: TARGET_CLUSTER['UCP_URI']]) {
-                        sh "docker stack deploy -c swarm/docker-compose.yml ${SWARM_STACK_NAME}-dev"
-                    }
-                }
-            }
-
             println("Application deployed to Development: http://${APPLICATION_FQDN}")
+            //http://simple-nginx.dev.wsoualhi.kube.us.demo.mirantis.com
         }
     }
 
@@ -152,7 +146,7 @@ node {
             sh 'echo "Tests passed"'
         }
     }
-
+/*
     stage('Promote') {
         httpRequest acceptType: 'APPLICATION_JSON', authentication: TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID'], contentType: 'APPLICATION_JSON', httpMode: 'POST', ignoreSslErrors: true, requestBody: "{\"targetRepository\": \"${IMAGE_NAMESPACE_PROD}/${IMAGE_REPOSITORY}\", \"targetTag\": \"${IMAGE_TAG}\"}", responseHandle: 'NONE', url: "${TARGET_CLUSTER['REGISTRY_URI']}/api/v0/repositories/${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}/tags/${IMAGE_TAG}/promotion"
     }
