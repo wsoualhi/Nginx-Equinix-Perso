@@ -149,11 +149,11 @@ node {
             sh 'echo "Tests passed"'
         }
     }
-/*
-    stage('Promote') {
-        httpRequest acceptType: 'APPLICATION_JSON', authentication: TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID'], contentType: 'APPLICATION_JSON', httpMode: 'POST', ignoreSslErrors: true, requestBody: "{\"targetRepository\": \"${IMAGE_NAMESPACE_PROD}/${IMAGE_REPOSITORY}\", \"targetTag\": \"${IMAGE_TAG}\"}", responseHandle: 'NONE', url: "${TARGET_CLUSTER['REGISTRY_URI']}/api/v0/repositories/${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}/tags/${IMAGE_TAG}/promotion"
-    }
 
+    stage('Promote') {
+        httpRequest acceptType: 'APPLICATION_JSON', authentication: 'MSRaws', contentType: 'APPLICATION_JSON', httpMode: 'POST', ignoreSslErrors: true, requestBody: "{\"targetRepository\": \"${IMAGE_NAMESPACE_PROD}/${IMAGE_REPOSITORY}\", \"targetTag\": \"${IMAGE_TAG}\"}", responseHandle: 'NONE', url: "${TARGET_CLUSTER_REGISTRY_URI}/api/v0/repositories/${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}/tags/${IMAGE_TAG}/promotion"
+    }
+/*
     stage('Sign Production Image') {
         withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER['REGISTRY_HOSTNAME']}",
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_PROD}",
@@ -167,17 +167,15 @@ node {
             }
         }
     }
-
+*/
     stage('Deploy to Production') {
         withEnv(["APPLICATION_FQDN=${IMAGE_REPOSITORY}.prod.${APPLICATION_DOMAIN}",
-                 "REGISTRY_HOSTNAME=${TARGET_CLUSTER['REGISTRY_HOSTNAME']}",
+                 "REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_PROD}",
                  "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
                  "IMAGE_TAG=${IMAGE_TAG}",
                  "USERNAME=${USERNAME}"]) {
-            if(ORCHESTRATOR.toLowerCase() == "kubernetes"){
-                println("Deploying to Kubernetes")
-                withEnv(["KUBERNETES_CONTEXT=${TARGET_CLUSTER['KUBERNETES_CONTEXT']}", 
+                withEnv(["KUBERNETES_CONTEXT=${TARGET_CLUSTER_KUBERNETES_CONTEXT}", 
                          "KUBERNETES_INGRESS=${KUBERNETES_INGRESS}",
                          "KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE_PROD}"]) {
                     sh 'envsubst < kubernetes/001_simple-nginx_deployment.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
@@ -185,17 +183,8 @@ node {
                     sh 'envsubst < kubernetes/003_simple-nginx_${KUBERNETES_INGRESS}.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                 }
             }
-            else if (ORCHESTRATOR.toLowerCase() == "swarm"){
-                println("Deploying to Swarm")
-                withEnv(["UCP_COLLECTION_PATH=${UCP_COLLECTION_PATH}"]) {
-                    withDockerServer([credentialsId: TARGET_CLUSTER['UCP_CREDENTIALS_ID'], uri: TARGET_CLUSTER['UCP_URI']]) {
-                        sh "docker stack deploy -c swarm/docker-compose.yml ${SWARM_STACK_NAME}"
-                    }
-                }
-            }
-
             println("Application deployed to Production: http://${APPLICATION_FQDN}")
         }
     }
-    */
+
 }
