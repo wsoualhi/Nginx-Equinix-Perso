@@ -8,6 +8,7 @@ IMAGE_REPOSITORY = "simple-nginx"
 TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
 TARGET_CLUSTER_REGISTRY_HOSTNAME = 'mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
 TARGET_CLUSTER_KUBE_DOMAIN_NAME = "mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com"// "kube.us.demo.mirantis.com" this is for US, how can we do for equinix ? 
+TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com:6443_admin"
 //variables that change for every user, to be changed to global automated variables
 IMAGE_NAMESPACE_DEV = "wsoualhi-dev"
 IMAGE_NAMESPACE_PROD = "wsoualhi-prod"
@@ -24,10 +25,12 @@ println IMAGE_TAG
 // For available target test clusters, contact your platform administrator, it is possible to use eu.demo.mirantis.com with istio_gateway
 // For available target clusters, contact your platform administrator, it is possible to use us.demo.mirantis.com with ingress.
 TARGET_CLUSTER_DOMAIN = "us.demo.mirantis.com"
+*/
 
 // Available ingress = [ "ingress" | "istio_gateway" ]
 KUBERNETES_INGRESS = "ingress"
 
+/*
 if(! CLUSTER.containsKey(TARGET_CLUSTER_DOMAIN)){
     error("Unknown cluster '${TARGET_CLUSTER_DOMAIN}'")
 }
@@ -129,7 +132,7 @@ node {
                  "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
                  "IMAGE_TAG=${IMAGE_TAG}",
                  "USERNAME=${USERNAME}"]) {
-                withEnv(["KUBERNETES_CONTEXT=${TARGET_CLUSTER['KUBERNETES_CONTEXT']}", 
+                withEnv(["KUBERNETES_CONTEXT=${TARGET_CLUSTER_KUBERNETES_CONTEXT}", 
                          "KUBERNETES_INGRESS=${KUBERNETES_INGRESS}",
                          "KUBERNETES_NAMESPACE=${KUBERNETES_NAMESPACE_DEV}"]) {
                     sh 'envsubst < kubernetes/001_simple-nginx_deployment.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
