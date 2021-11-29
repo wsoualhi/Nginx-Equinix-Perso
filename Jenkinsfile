@@ -182,9 +182,7 @@ node {
                     sh 'envsubst < kubernetes/002_simple-nginx_service.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                     sh 'envsubst < kubernetes/003_simple-nginx_${KUBERNETES_INGRESS}.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                 }
-            }
-            println("Application deployed to Production: http://${APPLICATION_FQDN}")
         }
+            println("Application deployed to Production: http://${APPLICATION_FQDN}")
     }
-
 }
