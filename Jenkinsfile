@@ -7,7 +7,7 @@ IMAGE_REPOSITORY = "simple-nginx"
 //temporary variables
 TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
 TARGET_CLUSTER_REGISTRY_HOSTNAME = 'mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
-TARGET_CLUSTER_KUBE_DOMAIN_NAME = "mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com"// "kube.us.demo.mirantis.com" this is for US, how can we do for equinix ? 
+TARGET_CLUSTER_KUBE_DOMAIN_NAME = "staging.presales.demo.mirantis.com"
 TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com:6443_admin"
 //variables that change for every user, to be changed to global automated variables
 IMAGE_NAMESPACE_DEV = "wsoualhi-dev"
@@ -16,6 +16,9 @@ KUBERNETES_NAMESPACE_DEV = "${IMAGE_NAMESPACE_DEV}"
 KUBERNETES_NAMESPACE_PROD = "${IMAGE_NAMESPACE_PROD}"
 USERNAME = "wsoualhi"
 APPLICATION_DOMAIN = "${USERNAME}.${TARGET_CLUSTER_KUBE_DOMAIN_NAME}"
+
+//http://simple-nginx.prod.wsoualhi.staging.presales.demo.mirantis.com
+
 //variables that change on every execution
 def IMAGE_TAG = LocalDateTime.now()
 IMAGE_TAG = IMAGE_TAG.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
@@ -140,7 +143,7 @@ node {
                     sh 'envsubst < kubernetes/003_simple-nginx_${KUBERNETES_INGRESS}.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                 }
             println("Application deployed to Development: http://${APPLICATION_FQDN}")
-            //http://simple-nginx.dev.wsoualhi.kube.us.demo.mirantis.com
+            // http://simple-nginx.dev.wsoualhi.staging.presales.demo.mirantis.com
         }
     }
 
@@ -183,8 +186,7 @@ node {
                     sh 'envsubst < kubernetes/003_simple-nginx_${KUBERNETES_INGRESS}.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                 }
             println("Application deployed to Production: http://${APPLICATION_FQDN}")
-            //http://simple-nginx.prod.wsoualhi.kube.us.demo.mirantis.com   --> sur equinix 
-            //
+            // http://simple-nginx.dev.wsoualhi.staging.presales.demo.mirantis.com
         }
 
     }
