@@ -4,11 +4,16 @@ import java.time.*
 import java.time.format.DateTimeFormatter
 //variables that are same for everyone 
 IMAGE_REPOSITORY = "simple-nginx"
-//temporary variables
+//temporary variables for AWS Wassim Testing
 TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
 TARGET_CLUSTER_REGISTRY_HOSTNAME = 'mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
 TARGET_CLUSTER_KUBE_DOMAIN_NAME = "staging.presales.demo.mirantis.com"
 TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com:6443_admin"
+//Prod variables 
+TARGET_CLUSTER_REGISTRY_URI = 'https://registry.prod.equinix.presales.demo.mirantis.com'
+TARGET_CLUSTER_REGISTRY_HOSTNAME = 'registry.prod.equinix.presales.demo.mirantis.com'
+TARGET_CLUSTER_KUBE_DOMAIN_NAME = "prod.presales.demo.mirantis.com"
+TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_kube.prod.equinix.presales.demo.mirantis.com:5443_jenkins"
 //variables that change for every user, to be changed to global automated variables
 IMAGE_NAMESPACE_DEV = "wsoualhi-dev"
 IMAGE_NAMESPACE_PROD = "wsoualhi-prod"
@@ -80,7 +85,7 @@ node {
     stage('Push') {
         //docker.withRegistry(TARGET_CLUSTER['REGISTRY_URI'], TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID']) {
             //docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
-            docker.withRegistry(TARGET_CLUSTER_REGISTRY_URI, 'MSRaws') {
+            docker.withRegistry(TARGET_CLUSTER_REGISTRY_URI, 'MSRequinixProd') {
             docker_image.push(IMAGE_TAG)
         }
     }
