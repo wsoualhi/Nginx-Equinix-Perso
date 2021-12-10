@@ -8,10 +8,19 @@ spec:
  rules:
    - host: ${APPLICATION_FQDN}
      http:
-       paths:
-         - backend:
-             serviceName: simple-nginx
-             servicePort: 80
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: simple-nginx
+            port:
+              number: 8080
+    #  http:
+    #    paths:
+    #      - backend:
+    #          serviceName: simple-nginx
+    #          servicePort: 80
 # apiVersion: networking.k8s.io/v1
 # kind: Ingress
 # metadata:
