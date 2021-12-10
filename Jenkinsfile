@@ -5,10 +5,10 @@ import java.time.format.DateTimeFormatter
 //variables that are same for everyone 
 IMAGE_REPOSITORY = "simple-nginx"
 //temporary variables for AWS Wassim Testing
-TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
-TARGET_CLUSTER_REGISTRY_HOSTNAME = 'mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
-TARGET_CLUSTER_KUBE_DOMAIN_NAME = "staging.presales.demo.mirantis.com"
-TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com:6443_admin"
+//TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
+//TARGET_CLUSTER_REGISTRY_HOSTNAME = 'mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
+//TARGET_CLUSTER_KUBE_DOMAIN_NAME = "staging.presales.demo.mirantis.com"
+//TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com:6443_admin"
 //Prod variables 
 TARGET_CLUSTER_REGISTRY_URI = 'https://registry.prod.equinix.presales.demo.mirantis.com'
 TARGET_CLUSTER_REGISTRY_HOSTNAME = 'registry.prod.equinix.presales.demo.mirantis.com'
