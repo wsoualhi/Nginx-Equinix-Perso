@@ -1,13 +1,31 @@
-apiVersion: extensions/v1beta1
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#  name: simple-nginx
+#  annotations:
+#    kubernetes.io/ingress.class: "nginx"
+# spec:
+#  rules:
+#    - host: ${APPLICATION_FQDN}
+#      http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: simple-nginx
+#             port:
+#               number: 8080
+
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
- name: simple-nginx
- annotations:
-   kubernetes.io/ingress.class: "nginx"
+  name: simple-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
- rules:
-   - host: ${APPLICATION_FQDN}
-     http:
+  rules:
+  - http:
       paths:
       - path: /
         pathType: Prefix
@@ -15,7 +33,7 @@ spec:
           service:
             name: simple-nginx
             port:
-              number: 8080
+              number: 80
     #  http:
     #    paths:
     #      - backend:
