@@ -117,22 +117,22 @@ node {
         }
         println('Response JSON: ' + scan_result)
     }
-    /*
+
     stage('Sign Development Image') {
         withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
                  "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
                  "IMAGE_TAG=${IMAGE_TAG}",
-                 "TRUST_SIGNER_KEY=${TARGET_CLUSTER['TRUST_SIGNER_KEY']}"]) {
-            withCredentials([string(credentialsId: TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'] , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
+                 "TRUST_SIGNER_KEY=${TRUST_SIGNER_KEY}"]) {
+            //withCredentials([string(credentialsId: TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'] , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
                 sh 'docker trust key load ${TRUST_SIGNER_KEY}'
                 sh 'docker trust sign ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
                 //println (TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'])
                 // com.mirantis.demo.us-jenkins_signing_signer-passphrase
-            }
+            //}
         }
     }
-    */
+
     stage('Deploy to Development') {
         withEnv(["APPLICATION_FQDN=${IMAGE_REPOSITORY}.dev.${APPLICATION_DOMAIN}",
                  "REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
