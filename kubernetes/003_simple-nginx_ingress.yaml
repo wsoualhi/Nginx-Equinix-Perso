@@ -25,7 +25,8 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - http:
+  - host: ${APPLICATION_FQDN}
+    http:
       paths:
       - path: /
         pathType: Prefix
