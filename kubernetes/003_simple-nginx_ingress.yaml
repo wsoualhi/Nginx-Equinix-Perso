@@ -23,6 +23,7 @@ metadata:
   name: simple-nginx
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
   - host: ${APPLICATION_FQDN}
