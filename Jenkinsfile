@@ -20,6 +20,7 @@ IMAGE_NAMESPACE_PROD = "wsoualhi-prod"
 KUBERNETES_NAMESPACE_DEV = "${IMAGE_NAMESPACE_DEV}"
 KUBERNETES_NAMESPACE_PROD = "${IMAGE_NAMESPACE_PROD}"
 USERNAME = "wsoualhi"
+TRUST_SIGNER_KEY = "dockersign"
 APPLICATION_DOMAIN = "${USERNAME}.${TARGET_CLUSTER_KUBE_DOMAIN_NAME}"
 
 //http://simple-nginx.prod.wsoualhi.staging.presales.demo.mirantis.com
@@ -123,7 +124,7 @@ node {
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
                  "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
                  "IMAGE_TAG=${IMAGE_TAG}",
-                 "TRUST_SIGNER_KEY= 'dockersign'"
+                 "TRUST_SIGNER_KEY= ${TRUST_SIGNER_KEY}"
                  ]) {
             withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID' , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
                 sh 'docker trust key load ${TRUST_SIGNER_KEY}'
