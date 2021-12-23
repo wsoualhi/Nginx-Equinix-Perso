@@ -124,16 +124,10 @@ node {
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
                  "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
                  "IMAGE_TAG=${IMAGE_TAG}",
-                 //"TRUST_SIGNER_KEY= ${TRUST_SIGNER_KEY}"
                  ]) {
             withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID', variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
-            //withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID', variable: 'passphrase')]) {
-            //withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID' , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
-                //sh 'docker trust key load ${TRUST_SIGNER_KEY}'
                 sh 'docker trust key load /var/lib/jenkins/client-bundle/key.pem'
                 sh 'docker trust sign ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
-                //println (TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'])
-                // com.mirantis.demo.us-jenkins_signing_signer-passphrase
             }
         }
     }
@@ -165,6 +159,20 @@ node {
 
     stage('Promote') {
         httpRequest acceptType: 'APPLICATION_JSON', authentication: 'MSRequinixProd', contentType: 'APPLICATION_JSON', httpMode: 'POST', ignoreSslErrors: true, requestBody: "{\"targetRepository\": \"${IMAGE_NAMESPACE_PROD}/${IMAGE_REPOSITORY}\", \"targetTag\": \"${IMAGE_TAG}\"}", responseHandle: 'NONE', url: "${TARGET_CLUSTER_REGISTRY_URI}/api/v0/repositories/${IMAGE_NAMESPACE_DEV}/${IMAGE_REPOSITORY}/tags/${IMAGE_TAG}/promotion"
+    }
+
+    stage('Sign Development Image') {
+        withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
+                 "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_PROD}",
+                 "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
+                 "IMAGE_TAG=${IMAGE_TAG}",
+                 ]) {
+            withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID', variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
+                sh 'docker pull ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
+                sh 'docker trust key load /var/lib/jenkins/client-bundle/key.pem'
+                sh 'docker trust sign ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
+            }
+        }
     }
     /*
     stage('Sign Production Image') {
