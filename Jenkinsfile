@@ -117,7 +117,7 @@ node {
         }
         println('Response JSON: ' + scan_result)
     }
-/*
+
     stage('Sign Development Image') {
         withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
@@ -134,7 +134,7 @@ node {
             }
         }
     }
-*/
+    
     stage('Deploy to Development') {
         withEnv(["APPLICATION_FQDN=${IMAGE_REPOSITORY}.dev.${APPLICATION_DOMAIN}",
                  "REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
