@@ -126,7 +126,7 @@ node {
                  "IMAGE_TAG=${IMAGE_TAG}",
                  //"TRUST_SIGNER_KEY= ${TRUST_SIGNER_KEY}"
                  ]) {
-            withCredentials([string(credentialsId: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE', variable: 'PASSPHRASE_PROD')]) {
+            withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID', variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
             //withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID', variable: 'passphrase')]) {
             //withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID' , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
                 //sh 'docker trust key load ${TRUST_SIGNER_KEY}'
