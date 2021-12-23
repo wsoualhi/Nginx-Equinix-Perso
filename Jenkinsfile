@@ -123,10 +123,10 @@ node {
                  "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_DEV}",
                  "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
                  "IMAGE_TAG=${IMAGE_TAG}",
-                 //"TRUST_SIGNER_KEY= 'dockersign'"
+                 "TRUST_SIGNER_KEY= 'dockersign'"
                  ]) {
             withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID' , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
-                //sh 'docker trust key load ${TRUST_SIGNER_KEY}'
+                sh 'docker trust key load ${TRUST_SIGNER_KEY}'
                 sh 'docker trust key load /var/lib/jenkins/client-bundle/key.pem'
                 sh 'docker trust sign ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
                 //println (TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'])
@@ -134,7 +134,7 @@ node {
             }
         }
     }
-    
+
     stage('Deploy to Development') {
         withEnv(["APPLICATION_FQDN=${IMAGE_REPOSITORY}.dev.${APPLICATION_DOMAIN}",
                  "REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
