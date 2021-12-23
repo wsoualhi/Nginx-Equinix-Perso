@@ -174,21 +174,7 @@ node {
             }
         }
     }
-    /*
-    stage('Sign Production Image') {
-        withEnv(["REGISTRY_HOSTNAME=${TARGET_CLUSTER['REGISTRY_HOSTNAME']}",
-                 "IMAGE_NAMESPACE=${IMAGE_NAMESPACE_PROD}",
-                 "IMAGE_REPOSITORY=${IMAGE_REPOSITORY}",
-                 "IMAGE_TAG=${IMAGE_TAG}",
-                 "TRUST_SIGNER_KEY=${TARGET_CLUSTER['TRUST_SIGNER_KEY']}"]) {
-            withCredentials([string(credentialsId: TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'] , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
-                sh 'docker pull ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
-                sh 'docker trust key load ${TRUST_SIGNER_KEY}'
-                sh 'docker trust sign ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
-            }
-        }
-    }
-    */
+
     stage('Deploy to Production') {
         withEnv(["APPLICATION_FQDN=${IMAGE_REPOSITORY}.prod.${APPLICATION_DOMAIN}",
                  "REGISTRY_HOSTNAME=${TARGET_CLUSTER_REGISTRY_HOSTNAME}",
