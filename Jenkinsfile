@@ -126,8 +126,10 @@ node {
                  "IMAGE_TAG=${IMAGE_TAG}",
                  //"TRUST_SIGNER_KEY= ${TRUST_SIGNER_KEY}"
                  ]) {
-            withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID' , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
+            withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID', variable: 'passphrase')]) {
+            //withCredentials([string(credentialsId: 'TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID' , variable: 'DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE')]) {
                 //sh 'docker trust key load ${TRUST_SIGNER_KEY}'
+                println ()
                 sh 'docker trust key load /var/lib/jenkins/client-bundle/key.pem'
                 sh 'docker trust sign ${REGISTRY_HOSTNAME}/${IMAGE_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}'
                 //println (TARGET_CLUSTER['TRUST_SIGNER_PASSPHRASE_CREDENTIALS_ID'])
