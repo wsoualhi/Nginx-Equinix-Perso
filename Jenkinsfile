@@ -6,67 +6,22 @@ import java.time.format.DateTimeFormatter
 USERNAME = "wsoualhi"
 //variables that are same for everyone 
 IMAGE_REPOSITORY = "simple-nginx"
-//temporary variables for AWS Wassim Testing
-//TARGET_CLUSTER_REGISTRY_URI = 'https://mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
-//TARGET_CLUSTER_REGISTRY_HOSTNAME = 'mirantis-demo-ws-msr-lb-b61096abded88cdc.elb.eu-west-3.amazonaws.com'
-//TARGET_CLUSTER_KUBE_DOMAIN_NAME = "staging.presales.demo.mirantis.com"
-//TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_mirantis-demo-ws-master-lb-ed1c7f13fc89417e.elb.eu-west-3.amazonaws.com:6443_admin"
+KUBERNETES_INGRESS = "ingress"
 //Prod variables 
 TARGET_CLUSTER_REGISTRY_URI = 'https://registry.prod.equinix.presales.demo.mirantis.com'
 TARGET_CLUSTER_REGISTRY_HOSTNAME = 'registry.prod.equinix.presales.demo.mirantis.com'
 TARGET_CLUSTER_KUBE_DOMAIN_NAME = "prod.presales.demo.mirantis.com"
 TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_kube.prod.equinix.presales.demo.mirantis.com:5443_jenkins"
-//variables that change for every user, to be changed to global automated variables
+//variables that change for every user
 IMAGE_NAMESPACE_DEV = "${USERNAME}-dev"
 IMAGE_NAMESPACE_PROD = "${USERNAME}-prod"
 KUBERNETES_NAMESPACE_DEV = "${IMAGE_NAMESPACE_DEV}"
 KUBERNETES_NAMESPACE_PROD = "${IMAGE_NAMESPACE_PROD}"
-//DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE = "dockersign"
 APPLICATION_DOMAIN = "${USERNAME}.${TARGET_CLUSTER_KUBE_DOMAIN_NAME}"
-
-//http://simple-nginx.prod.wsoualhi.staging.presales.demo.mirantis.com
-
 //variables that change on every execution
 def IMAGE_TAG = LocalDateTime.now()
 IMAGE_TAG = IMAGE_TAG.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
-println IMAGE_TAG
 
-/*
-// For available target test clusters, contact your platform administrator, it is possible to use eu.demo.mirantis.com with istio_gateway
-// For available target clusters, contact your platform administrator, it is possible to use us.demo.mirantis.com with ingress.
-TARGET_CLUSTER_DOMAIN = "us.demo.mirantis.com"
-*/
-
-// Available ingress = [ "ingress" | "istio_gateway" ]
-KUBERNETES_INGRESS = "ingress"
-
-/*
-if(! CLUSTER.containsKey(TARGET_CLUSTER_DOMAIN)){
-    error("Unknown cluster '${TARGET_CLUSTER_DOMAIN}'")
-}
-TARGET_CLUSTER = CLUSTER.get(TARGET_CLUSTER_DOMAIN)
-
-if(ORCHESTRATOR.toLowerCase() == "kubernetes"){
-    KUBERNETES_NAMESPACE_DEV = "${IMAGE_NAMESPACE_DEV}"
-    KUBERNETES_NAMESPACE_PROD = "${IMAGE_NAMESPACE_PROD}"
-
-    APPLICATION_DOMAIN = "${USERNAME}.${TARGET_CLUSTER['KUBE_DOMAIN_NAME']}"
-}
-else if (ORCHESTRATOR.toLowerCase() == "swarm"){
-    SWARM_SERVICE_NAME = "${USERNAME}-${IMAGE_REPOSITORY}"
-    SWARM_STACK_NAME = "${USERNAME}-${IMAGE_REPOSITORY}"
-    UCP_COLLECTION_PATH = "/Shared/Private/${USERNAME}"
-
-    APPLICATION_DOMAIN = "${USERNAME}.${TARGET_CLUSTER['SWARM_DOMAIN_NAME']}"
-}
-else {
-    error("Unsupported orchestrator")
-}
-
-if(! ["ingress", "istio_gateway"].contains(KUBERNETES_INGRESS)){
-    error("Unsupported Kubernetes ingress type '${KUBERNETES_INGRESS}'")
-}
-*/
 node {
     def docker_image
 
@@ -85,9 +40,8 @@ node {
     }
 
     stage('Push') {
-        //docker.withRegistry(TARGET_CLUSTER['REGISTRY_URI'], TARGET_CLUSTER['REGISTRY_CREDENTIALS_ID']) {
-            //docker.withRegistry('https://registry.hub.docker.com', 'dockerHub') {
-            docker.withRegistry(TARGET_CLUSTER_REGISTRY_URI, 'MSRequinixProd') {
+        //MSRequinixProd are the credentials configured in Jenkins
+        docker.withRegistry(TARGET_CLUSTER_REGISTRY_URI, 'MSRequinixProd') {
             docker_image.push(IMAGE_TAG)
         }
     }
@@ -148,7 +102,6 @@ node {
                     sh 'envsubst < kubernetes/003_simple-nginx_${KUBERNETES_INGRESS}.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                 }
             println("Application deployed to Development: http://${APPLICATION_FQDN}")
-            // http://simple-nginx.dev.wsoualhi.staging.presales.demo.mirantis.com
         }
     }
 
@@ -191,7 +144,6 @@ node {
                     sh 'envsubst < kubernetes/003_simple-nginx_${KUBERNETES_INGRESS}.yaml | kubectl --context=${KUBERNETES_CONTEXT} --namespace=${KUBERNETES_NAMESPACE} apply -f -'
                 }
             println("Application deployed to Production: http://${APPLICATION_FQDN}")
-            // http://simple-nginx.dev.wsoualhi.staging.presales.demo.mirantis.com
         }
 
     }
