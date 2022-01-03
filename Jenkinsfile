@@ -2,6 +2,8 @@
 import java.time.LocalDateTime
 import java.time.*
 import java.time.format.DateTimeFormatter
+//Variables that are specefic for each user - to be changed
+USERNAME = "wsoualhi"
 //variables that are same for everyone 
 IMAGE_REPOSITORY = "simple-nginx"
 //temporary variables for AWS Wassim Testing
@@ -15,12 +17,11 @@ TARGET_CLUSTER_REGISTRY_HOSTNAME = 'registry.prod.equinix.presales.demo.mirantis
 TARGET_CLUSTER_KUBE_DOMAIN_NAME = "prod.presales.demo.mirantis.com"
 TARGET_CLUSTER_KUBERNETES_CONTEXT = "ucp_kube.prod.equinix.presales.demo.mirantis.com:5443_jenkins"
 //variables that change for every user, to be changed to global automated variables
-IMAGE_NAMESPACE_DEV = "wsoualhi-dev"
-IMAGE_NAMESPACE_PROD = "wsoualhi-prod"
+IMAGE_NAMESPACE_DEV = "${USERNAME}-dev"
+IMAGE_NAMESPACE_PROD = "${USERNAME}-prod"
 KUBERNETES_NAMESPACE_DEV = "${IMAGE_NAMESPACE_DEV}"
 KUBERNETES_NAMESPACE_PROD = "${IMAGE_NAMESPACE_PROD}"
-USERNAME = "wsoualhi"
-DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE = "dockersign"
+//DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE = "dockersign"
 APPLICATION_DOMAIN = "${USERNAME}.${TARGET_CLUSTER_KUBE_DOMAIN_NAME}"
 
 //http://simple-nginx.prod.wsoualhi.staging.presales.demo.mirantis.com
